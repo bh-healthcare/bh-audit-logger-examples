@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - name: Check out bh-audit-logger-examples
+        uses: actions/checkout@v4
+
+      - name: Check out bh-audit-logger (sibling)
+        uses: actions/checkout@v4
+        with:
+          repository: bh-healthcare/bh-audit-logger
+          path: ../bh-audit-logger
+
+      - name: Check out bh-audit-schema (sibling, for contract tests)
+        uses: actions/checkout@v4
+        with:
+          repository: bh-healthcare/bh-audit-schema
+          path: ../bh-audit-schema
+        continue-on-error: true
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          pip install -e "../bh-audit-logger[jsonschema]"
+          pip install pytest ruff
+
+      - name: Lint
+        run: |
+          ruff check examples/ tests/
+          ruff format --check examples/ tests/
+
+      - name: Run tests
+        run: |
+          python -m pytest tests/ -v
+
+      - name: Run examples
+        run: |
+          for dir in examples/*/; do
+            echo "=== Running $dir ==="
+            python "$dir/main.py"
+          done
