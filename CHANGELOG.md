@@ -23,9 +23,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   detail with behavioral `FrozenInstanceError` assertion
 - **metadata_and_phi/main.py** — fixed off-by-one assertion bound (`<= 24` → `<= 23`)
 - **basic_logging/main.py** — updated docstring to include LOGIN events
-- **Makefile, ci.yml** — version-bounded `pytest` and `ruff` installs to match
+- **Makefile** — version-bounded `pytest` and `ruff` installs to match
   pyproject.toml `[dev]` extra
-- **ci.yml** — added token comments for private repo checkout
 
 ### Added
 
@@ -83,7 +82,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   structure, frozen dataclass, runtime_checkable protocol
 - **pyproject.toml** — project metadata and dev dependencies
 - **Makefile** — install, lint, test, examples, and all targets
-- **.github/workflows/ci.yml** — CI pipeline with lint, test, and example runs
 - **README.md** — usage instructions, example table, test table, pre-publish
   workflow
 
