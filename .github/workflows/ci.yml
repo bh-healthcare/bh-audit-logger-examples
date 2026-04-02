@@ -22,12 +22,14 @@ jobs:
         with:
           repository: bh-healthcare/bh-audit-logger
           path: ../bh-audit-logger
+          # For private repos, add: token: ${{ secrets.CROSS_REPO_PAT }}
 
       - name: Check out bh-audit-schema (sibling, for contract tests)
         uses: actions/checkout@v4
         with:
           repository: bh-healthcare/bh-audit-schema
           path: ../bh-audit-schema
+          # For private repos, add: token: ${{ secrets.CROSS_REPO_PAT }}
         continue-on-error: true
 
       - name: Set up Python ${{ matrix.python-version }}
@@ -38,7 +40,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -e "../bh-audit-logger[jsonschema]"
-          pip install pytest ruff
+          pip install "pytest>=7.0.0,<9" "ruff>=0.1.0,<1"
 
       - name: Lint
         run: |

@@ -12,7 +12,7 @@ from typing import Any
 import pytest
 from bh_audit_logger import AuditLogger, AuditLoggerConfig, MemorySink
 
-jsonschema = pytest.importorskip("jsonschema", reason="jsonschema required for validation stats")
+from tests.conftest import make_event
 
 
 class TestStatsZeroBaseline:
@@ -100,6 +100,10 @@ class TestFailureCounting:
 
 
 class TestValidationStats:
+    @pytest.fixture(autouse=True)
+    def _require_jsonschema(self) -> None:
+        pytest.importorskip("jsonschema", reason="jsonschema required for validation stats")
+
     def test_drop_mode_increments_dropped_and_validation_failures(self) -> None:
         sink = MemorySink()
         logger = AuditLogger(
@@ -111,8 +115,6 @@ class TestValidationStats:
             ),
             sink=sink,
         )
-        from tests.conftest import make_event
-
         event = make_event()
         event["outcome"] = {"status": "INVALID_STATUS"}
         logger.emit(event)

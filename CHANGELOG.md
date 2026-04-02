@@ -4,6 +4,44 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.1.1] - 2026-04-01
+
+### Fixed
+
+- **test_schema_contract.py** — parametrized `test_schema_structural_compare` so
+  each schema version is an independent test case (previously `pytest.skip()` in a
+  loop would abort remaining versions)
+- **test_examples_runnable.py** — added `test_at_least_one_example_exists` guard to
+  prevent silent zero-test-case pass if the examples directory is restructured
+- **test_stats_lifecycle.py** — narrowed `importorskip("jsonschema")` to only the
+  `TestValidationStats` class; stats baseline, emit counting, and failure counting
+  tests no longer skip when jsonschema is absent
+- **test_validation_modes.py** — clarified docstring for `test_invalid_pre_built_event_still_dropped_by_minimal`
+- **test_all_sinks.py** — made caplog record lookup filter by logger name instead of
+  relying on `records[-1]` position
+- **test_public_api_smoke.py** — replaced `__dataclass_params__.frozen` CPython
+  detail with behavioral `FrozenInstanceError` assertion
+- **metadata_and_phi/main.py** — fixed off-by-one assertion bound (`<= 24` → `<= 23`)
+- **basic_logging/main.py** — updated docstring to include LOGIN events
+- **Makefile, ci.yml** — version-bounded `pytest` and `ruff` installs to match
+  pyproject.toml `[dev]` extra
+- **ci.yml** — added token comments for private repo checkout
+
+### Added
+
+- **pyproject.toml** — `[build-system]` table (hatchling) for PEP 517/518 compliance
+- **schema_validation/main.py** — `standalone_validate_event()` demonstrating
+  `validate_event()` (raises `ValidationError` on invalid, distinct from
+  `validate_event_schema()` which returns a list)
+- **basic_logging/main.py** — `audit_access()` convenience method example
+- **test_validation_modes.py** — `test_validate_event_passes_valid` and
+  `test_validate_event_raises_on_invalid` covering the `validate_event()` function
+
+### Changed
+
+- Consistent top-level `make_event` imports across all test files (removed local
+  imports in `test_backward_compat.py` and `test_stats_lifecycle.py`)
+
 ## [0.1.0] - 2026-04-01
 
 ### Added
@@ -49,4 +87,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **README.md** — usage instructions, example table, test table, pre-publish
   workflow
 
+[0.1.1]: https://github.com/bh-healthcare/bh-audit-logger-examples/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/bh-healthcare/bh-audit-logger-examples/releases/tag/v0.1.0

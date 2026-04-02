@@ -113,15 +113,13 @@ class TestCanonicalExamplesValidateAgainstVendored:
             failures
         )
 
-    def test_schema_structural_compare(self, schema_repo_path: Path) -> None:
+    @pytest.mark.parametrize("ver", ["1.0", "1.1"])
+    def test_schema_structural_compare(self, schema_repo_path: Path, ver: str) -> None:
         """Vendored schemas should be structurally identical to canonical copies."""
-        for ver in ("1.0", "1.1"):
-            canonical = schema_repo_path / "schema" / "versions" / ver / "audit_event.schema.json"
-            if not canonical.exists():
-                pytest.skip(f"Canonical schema v{ver} not found")
-            vendored = load_schema(ver)
-            with open(canonical) as f:
-                canonical_data = json.load(f)
-            assert vendored == canonical_data, (
-                f"Vendored v{ver} schema does not match canonical copy"
-            )
+        canonical = schema_repo_path / "schema" / "versions" / ver / "audit_event.schema.json"
+        if not canonical.exists():
+            pytest.skip(f"Canonical schema v{ver} not found")
+        vendored = load_schema(ver)
+        with open(canonical) as f:
+            canonical_data = json.load(f)
+        assert vendored == canonical_data, f"Vendored v{ver} schema does not match canonical copy"

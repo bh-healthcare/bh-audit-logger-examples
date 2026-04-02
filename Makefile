@@ -2,7 +2,7 @@
 
 install:
 	pip install -e "../bh-audit-logger[jsonschema]"
-	pip install pytest ruff
+	pip install "pytest>=7.0.0,<9" "ruff>=0.1.0,<1"
 
 lint:
 	ruff check examples/ tests/

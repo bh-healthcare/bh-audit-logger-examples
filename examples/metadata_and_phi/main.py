@@ -156,7 +156,7 @@ def metadata_string_truncation() -> None:
     note_value = event["metadata"]["note"]
     print(f"  Truncated metadata: '{note_value}' (len={len(note_value)})")
     assert note_value.endswith("...")
-    assert len(note_value) <= 24  # 20 + "..."
+    assert len(note_value) <= 23  # value[:20] + "..."
 
 
 def main() -> None:

@@ -2,7 +2,7 @@
 Basic audit logging with bh-audit-logger (v0.4.0).
 
 Demonstrates the simplest usage: AuditLogger + LoggingSink emitting
-READ, CREATE, UPDATE, and DELETE events with default config.
+READ, CREATE, UPDATE, DELETE, and LOGIN events with default config.
 
 Run:
     python examples/basic_logging/main.py
@@ -51,6 +51,12 @@ def main() -> None:
         "DELETE",
         actor={"subject_id": "admin_01", "subject_type": "human", "roles": ["admin"]},
         resource={"type": "Note", "id": "note_100"},
+    )
+
+    logger.audit_access(
+        "READ",
+        actor={"subject_id": "clinician_42", "subject_type": "human"},
+        resource={"type": "Patient", "id": "pat_002"},
     )
 
     logger.audit_login_success(

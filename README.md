@@ -12,7 +12,7 @@ source .venv/bin/activate
 
 # Install bh-audit-logger from local checkout (with jsonschema extra)
 pip install -e "../bh-audit-logger[jsonschema]"
-pip install pytest ruff
+pip install "pytest>=7.0.0,<9" "ruff>=0.1.0,<1"
 
 # Run everything
 make all
@@ -24,9 +24,9 @@ Each example is a standalone script that prints output and exits cleanly.
 
 | Example | What it demonstrates |
 |---|---|
-| `basic_logging/` | Simplest usage: `AuditLogger` + `LoggingSink` with READ/CREATE/UPDATE/DELETE events |
+| `basic_logging/` | Simplest usage: `AuditLogger` + `LoggingSink` with CRUD, LOGIN, and `audit_access()` |
 | `file_sink/` | `JsonlFileSink` writing to a file, reading back, and verifying output |
-| `schema_validation/` | Runtime `validate_events=True` with both schema versions and all failure modes |
+| `schema_validation/` | Runtime `validate_events=True`, all failure modes, and standalone `validate_event()` |
 | `denied_and_downgrade/` | `audit_access_denied()` under v1.1 (DENIED) and v1.0 (downgraded to FAILURE) |
 | `custom_sink/` | Implementing the `AuditSink` protocol with custom backends |
 | `async_queue/` | `EmitQueue` for non-blocking event delivery with bounded backpressure |

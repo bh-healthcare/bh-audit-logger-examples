@@ -86,9 +86,9 @@ class TestLoggingSink:
                 actor={"subject_id": "u1", "subject_type": "human"},
                 resource={"type": "Patient"},
             )
-        assert len(caplog.records) >= 1
-        record = caplog.records[-1]
-        parsed = json.loads(record.message)
+        audit_records = [r for r in caplog.records if r.name == "bh.audit.test"]
+        assert len(audit_records) >= 1
+        parsed = json.loads(audit_records[-1].message)
         assert parsed["action"]["type"] == "READ"
 
     def test_satisfies_audit_sink_protocol(self) -> None:

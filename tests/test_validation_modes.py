@@ -17,6 +17,7 @@ from bh_audit_logger import (
     AuditValidationError,
     MemorySink,
     ValidationError,
+    validate_event,
     validate_event_minimal,
     validate_event_schema,
 )
@@ -26,7 +27,7 @@ from tests.conftest import make_event
 
 class TestValidateEventsDisabled:
     def test_invalid_pre_built_event_still_dropped_by_minimal(self) -> None:
-        """Even without jsonschema, minimal validation catches missing fields."""
+        """With validate_events=False, minimal validation still catches missing fields."""
         sink = MemorySink()
         logger = AuditLogger(
             config=AuditLoggerConfig(
@@ -159,3 +160,10 @@ class TestStandaloneValidation:
 
         errors_wrong = validate_event_schema(event_1_0, "1.1")
         assert len(errors_wrong) > 0, "v1.0 event should fail v1.1 schema (version const mismatch)"
+
+    def test_validate_event_passes_valid(self) -> None:
+        validate_event(make_event())
+
+    def test_validate_event_raises_on_invalid(self) -> None:
+        with pytest.raises(ValidationError):
+            validate_event({"bad": "event"})

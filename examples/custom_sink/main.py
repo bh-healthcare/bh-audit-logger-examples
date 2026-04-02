@@ -17,7 +17,12 @@ from bh_audit_logger import AuditLogger, AuditLoggerConfig, AuditSink
 
 
 class PostgresSink:
-    """Stub sink that prints a SQL INSERT instead of executing it."""
+    """Stub sink that prints a SQL INSERT instead of executing it.
+
+    Real implementations should use parameterized queries to prevent
+    SQL injection -- this stub uses string interpolation only for
+    readable demo output.
+    """
 
     def __init__(self, table: str = "audit_events") -> None:
         self._table = table
