@@ -19,6 +19,8 @@ from bh_audit_logger import (
     AuditLoggerConfig,
     AuditValidationError,
     MemorySink,
+    ValidationError,
+    validate_event,
     validate_event_schema,
 )
 
@@ -79,8 +81,27 @@ def valid_events_1_0() -> None:
     print(f"  v1.0 event valid: {result['action']['type']} / {result['outcome']['status']}")
 
 
+def _make_schema_invalid_event() -> dict:
+    """Build a structurally valid event that fails JSON schema validation.
+
+    Passes validate_event_minimal() (has all required keys, UUID event_id,
+    ISO timestamp) but fails the JSON schema (outcome.status is not in the
+    enum of allowed values).
+    """
+    return {
+        "schema_version": "1.1",
+        "event_id": "12345678-1234-5678-1234-567812345678",
+        "timestamp": "2026-04-01T12:00:00.000Z",
+        "service": {"name": "example-validation", "environment": "dev"},
+        "actor": {"subject_id": "user-1", "subject_type": "human"},
+        "action": {"type": "READ", "data_classification": "UNKNOWN"},
+        "resource": {"type": "Patient"},
+        "outcome": {"status": "BOGUS"},
+    }
+
+
 def invalid_event_drop_mode() -> None:
-    """Show that invalid events are silently dropped in 'drop' mode."""
+    """Show that schema-invalid events are silently dropped in 'drop' mode."""
     sink = MemorySink()
     logger = AuditLogger(
         config=AuditLoggerConfig(
@@ -93,13 +114,13 @@ def invalid_event_drop_mode() -> None:
         sink=sink,
     )
 
-    logger.emit({"bad": "event", "missing": "everything"})
+    logger.emit(_make_schema_invalid_event())
     snap = logger.stats.snapshot()
     print(f"  drop mode: events_in_sink={len(sink)}, dropped={snap['events_dropped_total']}")
 
 
 def invalid_event_log_and_emit_mode() -> None:
-    """Show that invalid events are logged AND emitted in 'log_and_emit' mode."""
+    """Show that schema-invalid events are logged AND still emitted in 'log_and_emit' mode."""
     sink = MemorySink()
     logger = AuditLogger(
         config=AuditLoggerConfig(
@@ -112,16 +133,17 @@ def invalid_event_log_and_emit_mode() -> None:
         sink=sink,
     )
 
-    logger.emit({"bad": "event", "missing": "everything"})
+    logger.emit(_make_schema_invalid_event())
     snap = logger.stats.snapshot()
     print(
         f"  log_and_emit mode: events_in_sink={len(sink)}, "
         f"validation_failures={snap['validation_failures_total']}"
     )
+    assert len(sink) == 1, "log_and_emit should still emit the event despite validation failure"
 
 
 def invalid_event_raise_mode() -> None:
-    """Show that invalid events raise AuditValidationError in 'raise' mode."""
+    """Show that schema-invalid events raise AuditValidationError in 'raise' mode."""
     sink = MemorySink()
     logger = AuditLogger(
         config=AuditLoggerConfig(
@@ -135,10 +157,43 @@ def invalid_event_raise_mode() -> None:
     )
 
     try:
-        logger.emit({"bad": "event", "missing": "everything"})
+        logger.emit(_make_schema_invalid_event())
         print("  raise mode: ERROR -- no exception raised!")
     except AuditValidationError as exc:
         print(f"  raise mode: caught AuditValidationError ({len(exc.errors)} errors)")
+
+
+def standalone_validate_event() -> None:
+    """Demonstrate validate_event(): raises ValidationError on invalid events.
+
+    Unlike validate_event_schema() which returns a list of error strings,
+    validate_event() raises ValidationError directly — a simpler API when
+    you just want pass-or-fail semantics.
+    """
+    sink = MemorySink()
+    logger = AuditLogger(
+        config=AuditLoggerConfig(
+            service_name="example-validation",
+            service_environment="dev",
+            target_schema_version="1.1",
+        ),
+        sink=sink,
+    )
+    event = logger.audit(
+        "READ",
+        actor={"subject_id": "user-1", "subject_type": "human"},
+        resource={"type": "Patient"},
+    )
+    assert event is not None
+
+    validate_event(event)
+    print("  Valid event: validate_event() passed (no exception)")
+
+    try:
+        validate_event(_make_schema_invalid_event())
+        print("  Invalid event: ERROR -- no exception raised!")
+    except ValidationError as exc:
+        print(f"  Invalid event: validate_event() raised ValidationError: {exc}")
 
 
 if __name__ == "__main__":
@@ -154,5 +209,8 @@ if __name__ == "__main__":
     invalid_event_drop_mode()
     invalid_event_log_and_emit_mode()
     invalid_event_raise_mode()
+
+    print("\nStandalone validate_event():")
+    standalone_validate_event()
 
     print("\nAll schema validation examples passed.")

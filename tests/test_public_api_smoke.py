@@ -10,6 +10,7 @@ from __future__ import annotations
 import dataclasses
 
 import bh_audit_logger
+import pytest
 from bh_audit_logger import (
     AuditLogger,
     AuditLoggerConfig,
@@ -40,7 +41,9 @@ class TestVersionAndExports:
 class TestClassStructure:
     def test_audit_logger_config_is_frozen_dataclass(self) -> None:
         assert dataclasses.is_dataclass(AuditLoggerConfig)
-        assert AuditLoggerConfig.__dataclass_params__.frozen  # type: ignore[attr-defined]
+        cfg = AuditLoggerConfig(service_name="t", service_environment="t")
+        with pytest.raises(dataclasses.FrozenInstanceError):
+            cfg.service_name = "mutated"  # type: ignore[misc]
 
     def test_audit_sink_is_runtime_checkable(self) -> None:
         class _TestSink:

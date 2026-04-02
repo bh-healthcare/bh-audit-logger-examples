@@ -6,6 +6,8 @@ ETL jobs, CLI tools, cron scripts -- anything that isn't a web framework.
 
 Migrated and expanded from bh-fastapi-examples/worker_audit_example.
 
+Requires: pip install bh-audit-logger[jsonschema]
+
 Run:
     python examples/batch_worker/main.py
 """

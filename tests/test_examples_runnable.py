@@ -18,6 +18,10 @@ EXAMPLES_DIR = Path(__file__).resolve().parent.parent / "examples"
 _example_dirs = sorted(d for d in EXAMPLES_DIR.iterdir() if d.is_dir() and (d / "main.py").exists())
 
 
+def test_at_least_one_example_exists() -> None:
+    assert len(_example_dirs) > 0, f"No example directories with main.py found under {EXAMPLES_DIR}"
+
+
 @pytest.mark.parametrize(
     "example_dir",
     _example_dirs,

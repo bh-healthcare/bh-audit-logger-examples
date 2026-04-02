@@ -14,6 +14,8 @@ pytest.importorskip("jsonschema", reason="jsonschema required for backward compa
 
 from bh_audit_logger import AuditLogger, AuditLoggerConfig, MemorySink, validate_event_schema
 
+from tests.conftest import make_event
+
 
 class TestSchemaVersionInterop:
     def test_1_0_events_pass_1_0_schema(self) -> None:
@@ -143,8 +145,6 @@ class TestDeniedDowngrade:
 
     def test_denied_fails_1_0_schema_directly(self) -> None:
         """A raw DENIED event should fail v1.0 schema (DENIED not in enum)."""
-        from tests.conftest import make_event
-
         event = make_event(
             schema_version="1.0",
             outcome={"status": "DENIED", "error_type": "RoleDenied"},
