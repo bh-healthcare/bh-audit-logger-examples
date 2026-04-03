@@ -137,11 +137,8 @@ class TestDynamoDBSink:
         monkeypatch.setenv("AWS_SESSION_TOKEN", "testing")
         monkeypatch.setenv("AWS_DEFAULT_REGION", "us-east-1")
 
-    @pytest.mark.skipif(
-        not pytest.importorskip("boto3", reason="boto3 not installed"),
-        reason="boto3 required",
-    )
     def test_satisfies_audit_sink_protocol(self, _aws_env: None) -> None:
+        boto3 = pytest.importorskip("boto3")  # noqa: F841
         from bh_audit_logger.sinks.dynamodb import DynamoDBSink
         from moto import mock_aws
 
@@ -153,11 +150,8 @@ class TestDynamoDBSink:
             )
             assert isinstance(sink, AuditSink)
 
-    @pytest.mark.skipif(
-        not pytest.importorskip("boto3", reason="boto3 not installed"),
-        reason="boto3 required",
-    )
     def test_emit_and_query(self, _aws_env: None) -> None:
+        boto3 = pytest.importorskip("boto3")  # noqa: F841
         from bh_audit_logger.sinks.dynamodb import DynamoDBSink
         from moto import mock_aws
 

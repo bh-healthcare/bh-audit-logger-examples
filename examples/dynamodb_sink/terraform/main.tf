@@ -5,7 +5,7 @@
 # On-demand billing, encryption at rest, point-in-time recovery, and TTL.
 #
 # Usage:
-#   cd terraform/
+#   cd examples/dynamodb_sink/terraform/
 #   terraform init
 #   terraform plan -var="environment=prod"
 #   terraform apply -var="environment=prod"
