@@ -69,6 +69,26 @@ Integration tests verify bh-audit-logger from an external consumer's perspective
 make test
 ```
 
+## Terraform (production deployment)
+
+The `terraform/` directory contains a ready-to-use Terraform module for creating the DynamoDB audit events table in AWS with production defaults:
+
+- On-demand billing (`PAY_PER_REQUEST`)
+- Encryption at rest (AWS-managed key)
+- Point-in-time recovery (35-day continuous backups)
+- TTL enabled on the `ttl` attribute
+- Three GSIs for HIPAA compliance queries
+- Minimum-privilege IAM policy
+
+```bash
+cd terraform/
+terraform init
+terraform plan -var="environment=prod"
+terraform apply -var="environment=prod"
+```
+
+See [`terraform/README.md`](terraform/README.md) for full variable and output reference, and [`bh-audit-logger/docs/deploying-dynamodb.md`](../bh-audit-logger/docs/deploying-dynamodb.md) for the complete deployment guide.
+
 ## Pre-publish workflow
 
 When bumping `bh-audit-logger` or `bh-audit-schema`:
