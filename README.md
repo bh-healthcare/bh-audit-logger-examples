@@ -10,9 +10,9 @@ All examples are **framework-agnostic**. No web framework is required.
 python -m venv .venv
 source .venv/bin/activate
 
-# Install bh-audit-logger from local checkout (with jsonschema extra)
-pip install -e "../bh-audit-logger[jsonschema]"
-pip install "pytest>=7.0.0,<9" "ruff>=0.1.0,<1"
+# Install bh-audit-logger from local checkout (with all optional extras)
+pip install -e "../bh-audit-logger[all]"
+pip install "pytest>=7.0.0,<9" "ruff>=0.1.0,<1" "moto[dynamodb]>=5.0,<6"
 
 # Run everything
 make all
@@ -33,6 +33,7 @@ Each example is a standalone script that prints output and exits cleanly.
 | `error_handling/` | `emit_failure_mode` behavior: silent, log, and raise |
 | `metadata_and_phi/` | Metadata allowlists, error sanitization, PHI token detection and redaction |
 | `batch_worker/` | Realistic ETL/cron job: batch exports, correlation IDs, DENIED outcomes, sink failures |
+| `dynamodb_sink/` | DynamoDB sink with compliance query patterns: patient access, actor activity, denial review (moto-backed) |
 
 **Run a single example:**
 
@@ -59,6 +60,7 @@ Integration tests verify bh-audit-logger from an external consumer's perspective
 | `test_stats_lifecycle.py` | Counter correctness across emit, failure, and validation paths |
 | `test_phi_safety_integration.py` | Metadata filtering, error redaction, PHI token detection |
 | `test_examples_runnable.py` | Every example script exits with code 0 and no tracebacks |
+| `test_dynamodb_integration.py` | DynamoDB sink emit + query round-trips, stats tracking, failure isolation (moto-backed) |
 | `test_public_api_smoke.py` | All `__all__` exports importable, class structure correct |
 
 **Run tests:**
