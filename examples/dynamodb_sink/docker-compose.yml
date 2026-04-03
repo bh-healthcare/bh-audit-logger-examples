@@ -1,0 +1,17 @@
+# DynamoDB Local for development and testing.
+#
+# Usage:
+#   cd examples/dynamodb_sink/
+#   docker compose up -d
+#   python main.py --live
+#
+# The sink uses create_table=True so the table is created automatically.
+# Data is stored in-memory and lost when the container stops.
+
+services:
+  dynamodb-local:
+    image: amazon/dynamodb-local:latest
+    ports:
+      - "8123:8000"
+    command: "-jar DynamoDBLocal.jar -sharedDb -inMemory"
+    restart: unless-stopped
