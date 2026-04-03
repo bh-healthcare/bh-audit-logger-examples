@@ -128,6 +128,52 @@ class TestJsonlFileSink:
         sink.close()
 
 
+class TestDynamoDBSink:
+    @pytest.fixture
+    def _aws_env(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setenv("AWS_ACCESS_KEY_ID", "testing")
+        monkeypatch.setenv("AWS_SECRET_ACCESS_KEY", "testing")
+        monkeypatch.setenv("AWS_SECURITY_TOKEN", "testing")
+        monkeypatch.setenv("AWS_SESSION_TOKEN", "testing")
+        monkeypatch.setenv("AWS_DEFAULT_REGION", "us-east-1")
+
+    def test_satisfies_audit_sink_protocol(self, _aws_env: None) -> None:
+        boto3 = pytest.importorskip("boto3")  # noqa: F841
+        from bh_audit_logger.sinks.dynamodb import DynamoDBSink
+        from moto import mock_aws
+
+        with mock_aws():
+            sink = DynamoDBSink(
+                table_name="test_sinks",
+                region="us-east-1",
+                create_table=True,
+            )
+            assert isinstance(sink, AuditSink)
+
+    def test_emit_and_query(self, _aws_env: None) -> None:
+        boto3 = pytest.importorskip("boto3")  # noqa: F841
+        from bh_audit_logger.sinks.dynamodb import DynamoDBSink
+        from moto import mock_aws
+
+        with mock_aws():
+            sink = DynamoDBSink(
+                table_name="test_sinks",
+                region="us-east-1",
+                create_table=True,
+            )
+            logger = AuditLogger(
+                config=AuditLoggerConfig(service_name="test", service_environment="test"),
+                sink=sink,
+            )
+            logger.audit(
+                "READ",
+                actor={"subject_id": "u1", "subject_type": "human"},
+                resource={"type": "Patient", "patient_id": "pat_1"},
+            )
+            results = sink.query_by_patient("pat_1")
+            assert len(results) == 1
+
+
 class TestCustomSink:
     def test_custom_class_satisfies_protocol(self) -> None:
         class MySink:

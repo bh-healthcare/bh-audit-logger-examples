@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Added
+
+- **examples/dynamodb_sink/** — DynamoDB sink example using moto for local
+  demo of compliance query patterns: patient access, actor activity, and
+  denial review via three GSIs.
+- **tests/test_dynamodb_integration.py** — integration tests for DynamoDBSink
+  through AuditLogger with moto: emit + query round-trips, stats tracking,
+  failure isolation, protocol conformance, mixed event types.
+- **tests/test_all_sinks.py** — added DynamoDBSink protocol and round-trip
+  tests (guarded by `importorskip("boto3")`).
+- **terraform/** — production-ready Terraform module for the DynamoDB audit
+  events table with on-demand billing, encryption at rest, point-in-time
+  recovery, TTL, three GSIs, and a minimum-privilege IAM policy.
+
+### Changed
+
+- **README.md** — updated install instructions to include `[all]` extra and
+  moto; added `dynamodb_sink` to examples table and
+  `test_dynamodb_integration` to test modules table.
+
 ## [0.1.1] - 2026-04-01
 
 ### Fixed
