@@ -174,6 +174,69 @@ class TestDynamoDBSink:
             assert len(results) == 1
 
 
+class TestLedgerSink:
+    def test_write_and_read_back(self, tmp_path: Path) -> None:
+        from bh_audit_logger import LedgerSink
+
+        path = tmp_path / "ledger.jsonl"
+        sink = LedgerSink(path=path, flush=True)
+        logger = AuditLogger(
+            config=AuditLoggerConfig(service_name="test", service_environment="test"),
+            sink=sink,
+        )
+        logger.audit(
+            "READ",
+            actor={"subject_id": "u1", "subject_type": "human"},
+            resource={"type": "Patient"},
+        )
+        logger.audit(
+            "CREATE",
+            actor={"subject_id": "u1", "subject_type": "human"},
+            resource={"type": "Note"},
+        )
+        sink.close()
+
+        lines = path.read_text().strip().splitlines()
+        assert len(lines) == 2
+        first = json.loads(lines[0])
+        assert first["action"]["type"] == "READ"
+        assert "integrity" in first
+        second = json.loads(lines[1])
+        assert second["action"]["type"] == "CREATE"
+        assert "integrity" in second
+
+    def test_chain_continuity(self, tmp_path: Path) -> None:
+        from bh_audit_logger import LedgerSink
+
+        path = tmp_path / "ledger.jsonl"
+        with LedgerSink(path=path) as sink:
+            logger = AuditLogger(
+                config=AuditLoggerConfig(service_name="test", service_environment="test"),
+                sink=sink,
+            )
+            for _ in range(3):
+                logger.audit(
+                    "READ",
+                    actor={"subject_id": "u1", "subject_type": "human"},
+                    resource={"type": "Patient"},
+                )
+
+        events = [json.loads(line) for line in path.read_text().strip().splitlines()]
+        assert "prev_event_hash" not in events[0]["integrity"]
+        for i in range(1, len(events)):
+            assert (
+                events[i]["integrity"]["prev_event_hash"]
+                == events[i - 1]["integrity"]["event_hash"]
+            )
+
+    def test_satisfies_audit_sink_protocol(self, tmp_path: Path) -> None:
+        from bh_audit_logger import LedgerSink
+
+        sink = LedgerSink(path=tmp_path / "test.jsonl")
+        assert isinstance(sink, AuditSink)
+        sink.close()
+
+
 class TestCustomSink:
     def test_custom_class_satisfies_protocol(self) -> None:
         class MySink:
