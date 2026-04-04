@@ -40,7 +40,7 @@ def logger(dynamo_sink: DynamoDBSink) -> AuditLogger:
     config = AuditLoggerConfig(
         service_name="integration-test",
         service_environment="test",
-        service_version="0.4.0",
+        service_version="1.0.0",
     )
     return AuditLogger(config, sink=dynamo_sink)
 

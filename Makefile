@@ -1,7 +1,7 @@
 .PHONY: install lint format test examples all
 
 install:
-	pip install -e "../bh-audit-logger[all]"
+	pip install -e "../bh-audit-logger[all,cli]"
 	pip install "pytest>=7.0.0,<9" "ruff>=0.1.0,<1" "moto[dynamodb]>=5.0,<6"
 
 lint:

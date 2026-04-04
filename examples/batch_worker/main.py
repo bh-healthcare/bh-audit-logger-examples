@@ -1,5 +1,5 @@
 """
-Realistic batch worker / ETL job demonstrating bh-audit-logger (v0.4.0).
+Realistic batch worker / ETL job demonstrating bh-audit-logger (v1.0.0).
 
 Shows how to emit audit events from non-HTTP contexts: Lambdas,
 ETL jobs, CLI tools, cron scripts -- anything that isn't a web framework.
@@ -24,7 +24,7 @@ logger = AuditLogger(
     config=AuditLoggerConfig(
         service_name="bh-example-worker",
         service_environment="dev",
-        service_version="0.4.0",
+        service_version="1.0.0",
         metadata_allowlist=frozenset({"batch_id", "record_count"}),
         max_metadata_value_length=200,
         emit_failure_mode="log",

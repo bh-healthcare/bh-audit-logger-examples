@@ -4,10 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [0.2.0] - 2026-04-02
 
 ### Added
 
+- **examples/verifier/** — chain verification demonstration: `verify_chain()` with
+  intact chain (PASS), tampered event (FAIL), and CLI usage reference.
+- **examples/telemetry/** — opt-in telemetry demonstration: counter accumulation,
+  report structure, privacy commitment showing no PII/PHI in telemetry payloads.
+- **tests/test_verifier_integration.py** — end-to-end LedgerSink -> `verify_chain()`
+  -> PASS; tamper event -> FAIL detection.
+- **tests/test_telemetry_integration.py** — TelemetryEmitter counter accumulation
+  across action types, report structure verification, no PII in report.
 - **examples/chain_hashing/** — chain hashing demonstration: `enable_integrity=True`
   with MemorySink, integrity blocks, chain continuity verification, and manual
   hash re-computation.
@@ -118,5 +126,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **README.md** — usage instructions, example table, test table, pre-publish
   workflow
 
+[0.2.0]: https://github.com/bh-healthcare/bh-audit-logger-examples/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/bh-healthcare/bh-audit-logger-examples/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/bh-healthcare/bh-audit-logger-examples/releases/tag/v0.1.0

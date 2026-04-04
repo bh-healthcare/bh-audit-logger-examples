@@ -1,5 +1,5 @@
 """
-Basic audit logging with bh-audit-logger (v0.4.0).
+Basic audit logging with bh-audit-logger (v1.0.0).
 
 Demonstrates the simplest usage: AuditLogger + LoggingSink emitting
 READ, CREATE, UPDATE, DELETE, and LOGIN events with default config.
@@ -20,7 +20,7 @@ logger = AuditLogger(
     config=AuditLoggerConfig(
         service_name="example-basic",
         service_environment="dev",
-        service_version="0.4.0",
+        service_version="1.0.0",
     ),
     sink=LoggingSink(logger_name="bh.audit", level="INFO"),
 )

@@ -29,7 +29,7 @@ def main() -> None:
             config=AuditLoggerConfig(
                 service_name="example-file-sink",
                 service_environment="dev",
-                service_version="0.4.0",
+                service_version="1.0.0",
             ),
             sink=sink,
         )

@@ -43,7 +43,7 @@ def main() -> None:
         config = AuditLoggerConfig(
             service_name="intake-api",
             service_environment="dev",
-            service_version="0.4.0",
+            service_version="1.0.0",
         )
         logger = AuditLogger(config, sink=sink)
 
