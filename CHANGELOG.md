@@ -8,6 +8,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **examples/chain_hashing/** — chain hashing demonstration: `enable_integrity=True`
+  with MemorySink, integrity blocks, chain continuity verification, and manual
+  hash re-computation.
+- **examples/ledger_sink/** — LedgerSink demonstration: JSONL file with built-in
+  chain hashing, read-back verification, and tamper detection demo.
+- **tests/test_chain_integration.py** — end-to-end chain hashing integration
+  tests through AuditLogger with MemorySink, LedgerSink, and DynamoDBSink;
+  chain continuity, hash verification, multiple algorithms, custom chain state.
+- **tests/test_all_sinks.py** — added LedgerSink write/read-back, chain
+  continuity, and protocol conformance tests.
 - **examples/dynamodb_sink/** — DynamoDB sink example using moto for local
   demo of compliance query patterns: patient access, actor activity, and
   denial review via three GSIs.
@@ -23,8 +33,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 
 - **README.md** — updated install instructions to include `[all]` extra and
-  moto; added `dynamodb_sink` to examples table and
-  `test_dynamodb_integration` to test modules table.
+  moto; added `chain_hashing`, `ledger_sink`, and `dynamodb_sink` to examples
+  table; added `test_chain_integration` and `test_dynamodb_integration` to
+  test modules table.
 
 ## [0.1.1] - 2026-04-01
 

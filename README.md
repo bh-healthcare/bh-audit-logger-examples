@@ -34,6 +34,8 @@ Each example is a standalone script that prints output and exits cleanly.
 | `metadata_and_phi/` | Metadata allowlists, error sanitization, PHI token detection and redaction |
 | `batch_worker/` | Realistic ETL/cron job: batch exports, correlation IDs, DENIED outcomes, sink failures |
 | `dynamodb_sink/` | DynamoDB sink with compliance query patterns: patient access, actor activity, denial review (moto-backed) |
+| `chain_hashing/` | `enable_integrity=True` with MemorySink — integrity blocks, chain continuity, manual hash verification |
+| `ledger_sink/` | `LedgerSink` writing tamper-evident JSONL, read-back verification, and tamper detection demo |
 
 **Run a single example:**
 
@@ -61,6 +63,7 @@ Integration tests verify bh-audit-logger from an external consumer's perspective
 | `test_phi_safety_integration.py` | Metadata filtering, error redaction, PHI token detection |
 | `test_examples_runnable.py` | Every example script exits with code 0 and no tracebacks |
 | `test_dynamodb_integration.py` | DynamoDB sink emit + query round-trips, stats tracking, failure isolation (moto-backed) |
+| `test_chain_integration.py` | End-to-end chain hashing through AuditLogger with MemorySink, LedgerSink, and DynamoDBSink |
 | `test_public_api_smoke.py` | All `__all__` exports importable, class structure correct |
 
 **Run tests:**
