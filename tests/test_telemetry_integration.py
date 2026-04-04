@@ -65,7 +65,7 @@ def test_telemetry_report_has_no_pii() -> None:
 
         emitter = logger._telemetry
         assert emitter is not None
-        report = emitter.counters.to_report("deploy-id", "svc", "test", "0.5.0")
+        report = emitter.counters.to_report("deploy-id", "svc", "test", "1.0.0")
         serialized = json.dumps(report)
 
         assert "john.doe" not in serialized

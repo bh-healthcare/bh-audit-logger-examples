@@ -1,6 +1,6 @@
 # bh-audit-logger-examples
 
-Examples and integration tests for **bh-audit-logger** (v0.5.0) — a pre-publish verification suite for schema vendoring, backward compatibility, and every public API surface.
+Examples and integration tests for **bh-audit-logger** (v1.0.0) — a pre-publish verification suite for schema vendoring, backward compatibility, and every public API surface.
 
 All examples are **framework-agnostic**. No web framework is required.
 

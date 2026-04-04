@@ -64,7 +64,7 @@ def main() -> None:
                 deployment_id="demo-id-12345678",
                 service_name="telemetry-demo",
                 environment="demo",
-                package_version="0.5.0",
+                package_version="1.0.0",
             )
             print(json.dumps(report, indent=2))
 
