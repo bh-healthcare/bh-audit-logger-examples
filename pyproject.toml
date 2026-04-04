@@ -4,7 +4,7 @@ build-backend = "hatchling.backends"
 
 [project]
 name = "bh-audit-logger-examples"
-version = "0.1.1"
+version = "0.2.0"
 description = "Examples and integration tests for bh-audit-logger — pre-publish verification for schema vendoring, backward compatibility, and every public API surface"
 readme = "README.md"
 license = {text = "Apache-2.0"}

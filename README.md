@@ -1,6 +1,6 @@
 # bh-audit-logger-examples
 
-Examples and integration tests for **bh-audit-logger** (v0.4.0) — a pre-publish verification suite for schema vendoring, backward compatibility, and every public API surface.
+Examples and integration tests for **bh-audit-logger** (v0.5.0) — a pre-publish verification suite for schema vendoring, backward compatibility, and every public API surface.
 
 All examples are **framework-agnostic**. No web framework is required.
 
@@ -10,8 +10,8 @@ All examples are **framework-agnostic**. No web framework is required.
 python -m venv .venv
 source .venv/bin/activate
 
-# Install bh-audit-logger from local checkout (with all optional extras)
-pip install -e "../bh-audit-logger[all]"
+# Install bh-audit-logger from local checkout (with all optional extras including CLI)
+pip install -e "../bh-audit-logger[all,cli]"
 pip install "pytest>=7.0.0,<9" "ruff>=0.1.0,<1" "moto[dynamodb]>=5.0,<6"
 
 # Run everything
@@ -36,6 +36,8 @@ Each example is a standalone script that prints output and exits cleanly.
 | `dynamodb_sink/` | DynamoDB sink with compliance query patterns: patient access, actor activity, denial review (moto-backed) |
 | `chain_hashing/` | `enable_integrity=True` with MemorySink — integrity blocks, chain continuity, manual hash verification |
 | `ledger_sink/` | `LedgerSink` writing tamper-evident JSONL, read-back verification, and tamper detection demo |
+| `verifier/` | `verify_chain()` programmatic verification: intact chain PASS, tampered event FAIL, CLI usage reference |
+| `telemetry/` | Opt-in telemetry: counter accumulation, report structure, privacy commitment (no PII/PHI) |
 
 **Run a single example:**
 
@@ -65,6 +67,8 @@ Integration tests verify bh-audit-logger from an external consumer's perspective
 | `test_dynamodb_integration.py` | DynamoDB sink emit + query round-trips, stats tracking, failure isolation (moto-backed) |
 | `test_chain_integration.py` | End-to-end chain hashing through AuditLogger with MemorySink, LedgerSink, and DynamoDBSink |
 | `test_public_api_smoke.py` | All `__all__` exports importable, class structure correct |
+| `test_verifier_integration.py` | End-to-end LedgerSink -> `verify_chain()` -> PASS; tamper -> FAIL |
+| `test_telemetry_integration.py` | TelemetryEmitter counter accumulation, report structure, no PII |
 
 **Run tests:**
 
