@@ -1,6 +1,6 @@
 # bh-audit-logger-examples
 
-Examples and integration tests for **bh-audit-logger** (v1.0.0) — a pre-publish verification suite for schema vendoring, backward compatibility, and every public API surface.
+Examples and integration tests for **bh-audit-logger** (v1.1.0) — a pre-publish verification suite for schema vendoring, backward compatibility, and every public API surface.
 
 All examples are **framework-agnostic**. No web framework is required.
 
@@ -37,7 +37,7 @@ Each example is a standalone script that prints output and exits cleanly.
 | `chain_hashing/` | `enable_integrity=True` with MemorySink — integrity blocks, chain continuity, manual hash verification |
 | `ledger_sink/` | `LedgerSink` writing tamper-evident JSONL, read-back verification, and tamper detection demo |
 | `verifier/` | `verify_chain()` programmatic verification: intact chain PASS, tampered event FAIL, CLI usage reference |
-| `telemetry/` | Opt-in telemetry: counter accumulation, report structure, privacy commitment (no PII/PHI) |
+| `telemetry/` | Lambda-safe telemetry: dual-trigger flush, context manager with `close()`, counter accumulation (no PII/PHI) |
 
 **Run a single example:**
 
@@ -68,7 +68,7 @@ Integration tests verify bh-audit-logger from an external consumer's perspective
 | `test_chain_integration.py` | End-to-end chain hashing through AuditLogger with MemorySink, LedgerSink, and DynamoDBSink |
 | `test_public_api_smoke.py` | All `__all__` exports importable, class structure correct |
 | `test_verifier_integration.py` | End-to-end LedgerSink -> `verify_chain()` -> PASS; tamper -> FAIL |
-| `test_telemetry_integration.py` | TelemetryEmitter counter accumulation, report structure, no PII |
+| `test_telemetry_integration.py` | TelemetryEmitter counter accumulation, context manager/close(), report structure, no PII |
 
 **Run tests:**
 

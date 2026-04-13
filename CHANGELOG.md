@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Changed
+
+- **examples/telemetry/main.py** — updated for bh-audit-logger v1.1.0 Lambda-safe
+  telemetry: uses `with AuditLogger(config) as logger:` context manager for automatic
+  `close()` on exit; added `telemetry_flush_interval_seconds`,
+  `telemetry_event_flush_threshold`, `telemetry_http_timeout_s` config fields.
+
+### Added
+
+- **tests/test_telemetry_integration.py** — `test_telemetry_context_manager_calls_close()`
+  verifying the new context manager protocol.
+
+### Fixed
+
+- **Telemetry payload format** — telemetry report now uses `"schema": "bh-telemetry-v1"`
+  and nested `"period": {"start": ..., "end": ...}` to match the receiver Lambda API.
+  Previous format was silently rejected with HTTP 400.
+
 ## [0.2.0] - 2026-04-02
 
 ### Added

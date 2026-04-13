@@ -43,6 +43,27 @@ def test_telemetry_counters_accumulate() -> None:
         assert counters.by_outcome.get("SUCCESS") == 2
 
 
+def test_telemetry_context_manager_calls_close() -> None:
+    """AuditLogger context manager should flush telemetry on exit."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        config = AuditLoggerConfig(
+            service_name="telemetry-test",
+            service_environment="test",
+            telemetry_enabled=True,
+            telemetry_endpoint="https://example.com/telemetry",
+            telemetry_deployment_id_path=tmpdir,
+        )
+        sink = MemorySink()
+        with AuditLogger(config=config, sink=sink) as logger:
+            logger.audit(
+                "READ",
+                actor={"subject_id": "u1", "subject_type": "human"},
+                resource={"type": "Patient"},
+                outcome={"status": "SUCCESS"},
+            )
+            assert logger._telemetry is not None
+
+
 def test_telemetry_report_has_no_pii() -> None:
     """Telemetry report must contain no PII/PHI."""
     with tempfile.TemporaryDirectory() as tmpdir:
