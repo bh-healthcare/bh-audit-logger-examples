@@ -57,7 +57,8 @@ class TestVendoredSchemaStructure:
 
     def test_1_1_has_denied_status(self) -> None:
         schema = load_schema("1.1")
-        statuses = schema["properties"]["outcome"]["properties"]["status"]["enum"]
+        # v1.1.2: enum extracted into $defs/OutcomeStatus and referenced via $ref
+        statuses = schema["$defs"]["OutcomeStatus"]["enum"]
         assert "DENIED" in statuses
 
     def test_1_0_has_no_denied_status(self) -> None:

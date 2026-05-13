@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-05-12
+
+### Changed
+
+- Updated bh-audit-logger dependency reference to v1.1.1 (vendored bh-audit-schema
+  v1.1 now uses `$defs` for `ActionType`, `OutcomeStatus`, and `DataClassification`;
+  no behavioral change to examples).
+- **tests/test_schema_contract.py::test_1_1_has_denied_status** — adapted to the
+  new `$defs/OutcomeStatus` location for the v1.1 outcome status enum (was reading
+  the inline `properties.outcome.properties.status.enum` array, which is now a
+  `$ref` to `#/$defs/OutcomeStatus`).
+  
 ### Changed
 
 - **examples/telemetry/main.py** — updated for bh-audit-logger v1.1.0 Lambda-safe
@@ -23,6 +35,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Telemetry payload format** — telemetry report now uses `"schema": "bh-telemetry-v1"`
   and nested `"period": {"start": ..., "end": ...}` to match the receiver Lambda API.
   Previous format was silently rejected with HTTP 400.
+
 
 ## [0.2.0] - 2026-04-02
 
@@ -146,6 +159,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **README.md** — usage instructions, example table, test table, pre-publish
   workflow
 
+[0.2.1]: https://github.com/bh-healthcare/bh-audit-logger-examples/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/bh-healthcare/bh-audit-logger-examples/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/bh-healthcare/bh-audit-logger-examples/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/bh-healthcare/bh-audit-logger-examples/releases/tag/v0.1.0
