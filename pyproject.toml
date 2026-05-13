@@ -4,13 +4,13 @@ build-backend = "hatchling.backends"
 
 [project]
 name = "bh-audit-logger-examples"
-version = "0.2.0"
+version = "0.2.1"
 description = "Examples and integration tests for bh-audit-logger — pre-publish verification for schema vendoring, backward compatibility, and every public API surface"
 readme = "README.md"
 license = {text = "Apache-2.0"}
 requires-python = ">=3.11"
 authors = [
-    { name = "BH Healthcare", email = "oss@bh-healthcare.github.io" }
+    { name = "BH Healthcare", email = "oss@bh-healthcare.org" }
 ]
 
 dependencies = []
